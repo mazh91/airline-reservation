@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.*;
-import javax.swing.event.*;
 import java.util.*;
 
 //tests the Airline PRGRM
@@ -25,7 +24,7 @@ public class AirplaneSeatViewer
 
 		final AirplaneComponent flightComp = new AirplaneComponent();
 
-		ArrayList<AirlineFlight> newFlightList = flightComp.flightList;
+		ArrayList<AirlineFlight> newFlightList = new ArrayList<AirlineFlight>();
 
 		final File file = new File ("flight.dat");
 		

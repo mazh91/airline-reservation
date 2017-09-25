@@ -28,4 +28,13 @@ public class Passenger implements Serializable
 		this.name=name;
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		Passenger otherPassenger = (Passenger) o;
+		if (otherPassenger.getName().equals(this.name) &&
+				otherPassenger.getSeatName().equals(this.seatName) )
+			return true;
+		return false;
+	}
+	
 }

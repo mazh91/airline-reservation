@@ -6,7 +6,8 @@ import java.io.Serializable;
 public class Seat  implements Serializable
 {
   Rectangle airplane;
-  private int xLeft, yTop, width, passengerID;	
+  private int xLeft, yTop, width;
+String passengerName;	
   private String seatName;
   private boolean isOccupied; 
   Rectangle square;
@@ -77,13 +78,14 @@ public class Seat  implements Serializable
 	    	g2.drawString(getSeatName() ,(int) square.getCenterX(), (int) square.getCenterY());
   }
   
-  public int getPassengerID() 
+  public String getPassengerName() 
   {
-	return passengerID;
+	return passengerName;
   }
-  public void setPassengerID(int passengerID) 
+  
+  public void setPassengerName(String passengerName) 
   {
-	this.passengerID = passengerID;
+	this.passengerName = passengerName;
   }
   
 }

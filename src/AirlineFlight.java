@@ -1,12 +1,14 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 //class that creates a flight
 public class AirlineFlight  implements Serializable
 {
 	AirplaneModel airplaneModel;
 	AirplaneComponent newComp = new AirplaneComponent();
 	
-	ArrayList<Passenger> passengerList = new ArrayList<Passenger>();
+//	ArrayList<Passenger> passengerList = new ArrayList<Passenger>();
+	HashMap<String, Boolean> passengerList = new HashMap<String, Boolean>();
 	private String name;
 	private String flightNum;
 	private String seatName;
@@ -25,7 +27,7 @@ public class AirlineFlight  implements Serializable
 	void addPassenger(String name, String seatName)
 	{
 		Passenger passenger = new Passenger (name, seatName);
-		passengerList.add(passenger);
+		passengerList.put(name, true);
 	}
 	//searches through seatlist to obtain current seat
 	Seat getSeat(int x, int y)
@@ -41,6 +43,7 @@ public class AirlineFlight  implements Serializable
 
 		return seat;  
 	}	
+	// TODO: Cannot select previously assigned seat to same passenger
 	//assigns seats
 	void assignSeat(String passengerName, int x, int y)//search through passenger list and adds pass if certain conditions are met.
 	{
@@ -48,108 +51,79 @@ public class AirlineFlight  implements Serializable
 		Seat seat = getSeat(x, y);
 		if( seat != null)
 		{
-
+//			Passenger dummyPassenger = new Passenger(passengerName, seat.getSeatName());
+			// 3rd Attempt
+			if(seat.getPassengerName() != null && seat.getPassengerName().equals(passengerName))
+			{
+				seat.setIsOccupied(false);
+				passengerList.put(passengerName, false);	
+				seat.setPassengerName(null);
+				return;
+			}
+			
 			isChangingSeat = false;
 			isOnFlight = false;
-			
-			
-//			 2nd Attempt
-			for (Passenger passenger : passengerList) {
-				if (passenger.getSeatName().equals(seat.getSeatName())) { // && seat.getSeatName().equals(anObject)  passenger.getName().equals(passengerName)
-					if (seat.getIsOccupied() ) { 
-						getSeat(x, y).setIsOccupied(false);
-						passengerList.remove(passenger);
-						isChangingSeat = true;
-						break;
-					}
-					return;
-				}
+			for (String pName : passengerList.keySet()) {
+				if ( passengerList.get(pName) && pName.equals(passengerName) )
+					isOnFlight = true;
 			}
-			
-			if(seat.getIsOccupied())
-				return;
-			
-				/*for(int i = 0; i < passengerList.size(); i++)
-				{
 					
-					// passenger already is on the flight!
-					System.out.println( "passenger at i: " + passengerList.get(i).getName() );
-					if ( passengerName.equals(passengerList.get(i).getName()) && !getSeat(x, y).getIsOccupied() ) 
-						throw new IllegalArgumentException();
-
-					System.out.println("current seat no:" + getSeat(x, y).getSeatName() + "/ list seat no:" + passengerList.get(i).getSeatName());
-					// passenger wants to change seat
-					if(getSeat(x,y).getSeatName().equals( passengerList.get(i).getSeatName()) && passengerName.equals(passengerList.get(i).getName() )) 						//if seatname and passname are not the same; then its a new passenger.
-					{
-						getSeat(x,y).setIsOccupied(false);
-						passengerList.remove(i);
-						isChangingSeat = true;
-					}
-	
-					else if ( passengerName.equals(passengerList.get(i).getName()) )	
-						// if there's no "else" beside this if, when there are no passengers, 
-//						 (the previous condition removed it) java's gonna throw exception 
-//						 b/c it's trying to access null pointer
-							isOnFlight = true;
-				}*/
-				
-				IllegalArgumentException exception = new IllegalArgumentException();//cannot initialize inside the if
-				
-				if ( passengerName.length() == 0 )
-					throw exception;
-				else
-					for(int j=0; j < passengerName.length(); j++)//goes through each letter, error checking for nonalphachars
-					{
-						if( !Character.isLetter(passengerName.charAt(j)))
-							throw exception;
-					}
-				
-				// add new passenger
-				if ( isChangingSeat == false && !isOnFlight ) 
+			if ( passengerName.length() == 0 )
+				return; // throw exception;
+			else
+				for(int j=0; j < passengerName.length(); j++)//goes through each letter, error checking for nonalphachars
 				{
-					System.out.println("seat selected!");
-					Passenger passenger = new Passenger ( passengerName, getSeat(x,y).getSeatName() );
-					passengerList.add(passenger);
-					getSeat(x,y).setIsOccupied(true);
-					System.out.println( "seat " + getSeat(x,y).getSeatName() + " is occupied? " + getSeat(x,y).getIsOccupied());
+					if( !Character.isLetter(passengerName.charAt(j)))
+						return; // throw exception;
 				}
+			
+			// add new passenger
+			if ( isChangingSeat == false && !isOnFlight ) 
+			{
+				System.out.println("seat selected!");
+				Passenger passenger = new Passenger ( passengerName, seat.getSeatName() );
+				seat.setPassengerName(passengerName);
+				passengerList.put(passengerName, true);
+				getSeat(x,y).setIsOccupied(true);
+				System.out.println( "seat " + seat.getSeatName() + " is occupied? " + seat.getIsOccupied());
 			}
 		}
-		//getters and setters
-		public String getSeatName() 
-		{
-			return seatName;
-		}
-
-		public void setSeatName(String seatName) 
-		{
-			this.seatName = seatName;
-		}
-
-		public String getName() 
-		{
-			return name;
-		}
-
-		public void setName(String name) 
-		{
-			this.name = name;
-		}
-
-		public boolean isOnFlight() {
-			return isOnFlight;
-		}
-
-		public void setOnFlight(boolean isOnFlight) {
-			this.isOnFlight = isOnFlight;
-		}
-
-		public String getFlightNum() {
-			return flightNum;
-		}
-
-		public void setFlightNum(String flightNum) {
-			this.flightNum = flightNum;
-		}
-
 	}
+	//getters and setters
+	public String getSeatName() 
+	{
+		return seatName;
+	}
+
+	public void setSeatName(String seatName) 
+	{
+		this.seatName = seatName;
+	}
+
+	public String getName() 
+	{
+		return name;
+	}
+
+	public void setName(String name) 
+	{
+		this.name = name;
+	}
+
+	public boolean isOnFlight() {
+		return isOnFlight;
+	}
+
+	public void setOnFlight(boolean isOnFlight) {
+		this.isOnFlight = isOnFlight;
+	}
+
+	public String getFlightNum() {
+		return flightNum;
+	}
+
+	public void setFlightNum(String flightNum) {
+		this.flightNum = flightNum;
+	}
+
+}
