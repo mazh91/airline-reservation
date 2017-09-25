@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import javax.swing.*;
+
 import java.util.*;
 
 //tests the Airline PRGRM
@@ -16,6 +18,7 @@ public class AirplaneSeatViewer
 	//instance vars
 	public static int randNo;
 	final static int CONSTANT = 20;
+//	public static Color nameBorderColor = Color.BLACK;
 
 //	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws ClassNotFoundException
@@ -99,7 +102,8 @@ public class AirplaneSeatViewer
 		// Create a panel to store our two buttons
 		JPanel panel = new JPanel();
 
-		// add the datafields to panel
+		// TODO: Highlight(red) name field on validity error
+		// Add data fields to panel
 		panel.add(flightComp.getNameField());
 //		panel.add(flightComp.flightField);
 //		panel.add(flightComp.selFlightBttn);
@@ -113,6 +117,7 @@ public class AirplaneSeatViewer
 		JButton printButton = new JButton("Print Pass");
 		frame.add(panel,BorderLayout.SOUTH);
 
+		// TODO: Re-enable print functionality
 		//prints pass
 		class PrintListener implements ActionListener 
 		{

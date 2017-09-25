@@ -28,6 +28,8 @@ public class AirplaneComponent extends JComponent implements Serializable
 //	final JTextField flightField = new JTextField("6387");
 	final JScrollPane scrollPane = new JScrollPane();
 	final JTextArea textOutput = new JTextArea();
+	
+
 
 	//constructs airline of flights
 	public AirplaneComponent()
@@ -39,27 +41,25 @@ public class AirplaneComponent extends JComponent implements Serializable
 		
 		errorField.setEnabled(false);
 		
-		//determines whether usr has clicked inside the seat
+		// Determines whether user has clicked on a seat
 		class SeatSelected implements MouseListener
 		{
 
 			public void mouseClicked(MouseEvent event) 
 			{ 
 				flight = flightList.get(getFlightIndex());
-				
-				try
-				{
 					
-					flight.assignSeat( getNameField().getText(), event.getX(), event.getY()-CONSTANT );
-
-				}
-				catch (IllegalArgumentException e)
-				{
+				ErrorCodes rc = flight.assignSeat( getNameField().getText(), event.getX(), event.getY()-CONSTANT );
+				
+				if(rc.getId() < 0){
+					nameField.setBorder(BorderFactory.createLineBorder(Color.RED));
 					errorField.setText("Enter your Name/Flight to reserve Seat");
-
+					System.err.println("E: " + rc.getMsg());
 				}
+				else
+					nameField.setBorder(UIManager.getBorder("TextField.border"));
 
-				repaint();//never repaint in a loop
+				repaint();	//never repaint in a loop
 
 			}
 
@@ -84,7 +84,16 @@ public class AirplaneComponent extends JComponent implements Serializable
 			flightList.get(getFlightIndex()).airplaneModel.seatList.get(j).draw(g2);
 
 	}
-	//getters and setters
+	
+	
+	// Getters and setters
+/*	public static void setNameBorderColor(Color color){
+		borderColor = color;
+	}
+	public static Color getNameBorderColor(){
+		return borderColor;
+	}
+	*/
 	public void setText(String text) {
 		this.text = text;
 	}
